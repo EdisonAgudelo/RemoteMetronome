@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" href="/static/assets/metronome.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Metronome</title>
+    <link rel='stylesheet' type='text/css' href='/static/styles/index.css'>
+</head>
+
+<body>
+    <h1>Metronome Control</h1>
+    <form id="settings">
+        <label for="tempo">Tempo (BPM):</label>
+        <div class="input-group">
+            <button type="button" class="btn-dec" onclick="changeValue('tempo', -1, 400, 30)">-</button>
+            <input type="number" id="tempo" name="tempo" min="10" max="400" value="100">
+            <button type="button" class="btn-inc" onclick="changeValue('tempo', 1, 400, 30)">+</button>
+        </div>
+
+        <label for="beat">Beats in bar:</label>
+        <div class="input-group">
+            <button type="button" class="btn-dec" onclick="changeValue('beat', -1, 24, 1)">-</button>
+            <input type="number" id="beat" name="beat" min="1" max="24" value="4">
+            <button type="button" class="btn-inc" onclick="changeValue('beat', 1, 24, 1)">+</button>
+        </div>
+
+        <label for="bar">Bar.beat:</label>
+        <div class="input-group">
+            <input type="text" id="bar" name="bar" value="0.0" readonly required>
+        </div>
+
+        <button type="submit" id="metro_button"></button>
+    </form>
+
+    <button type="button" id="tap">Tap Tempo</button>
+
+    <p hidden id="metro_state">{{ metro_running }}</p>
+    <p hidden id="start_text">Start</p>
+    <p hidden id="stop_text">Stop</p>
+
+    <script src="/static/scripts/index.js"></script>
+
+</body>
+
+</html>
