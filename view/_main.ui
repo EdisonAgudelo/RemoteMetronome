@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>453</width>
-    <height>261</height>
+    <width>458</width>
+    <height>297</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,20 +41,6 @@
        <string>Settings</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QLabel" name="h_sound_label">
-         <property name="text">
-          <string>H sound</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="l_sound_label">
-         <property name="text">
-          <string>L sound</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="2">
         <widget class="QToolButton" name="h_sound_button">
          <property name="text">
@@ -72,8 +58,15 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="l_sound_input"/>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="index_combo_box"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="l_sound_label">
+         <property name="text">
+          <string>L sound</string>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="index_label">
@@ -82,8 +75,15 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="index_combo_box"/>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="l_sound_input"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="h_sound_label">
+         <property name="text">
+          <string>H sound</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -93,23 +93,7 @@
       <property name="title">
        <string>Output</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="1">
-        <widget class="QComboBox" name="interface_combo_box"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="channel_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Channel</string>
-         </property>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="interface_label">
          <property name="sizePolicy">
@@ -123,7 +107,20 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="1" column="0">
+        <widget class="QLabel" name="channel_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Channel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
         <widget class="QComboBox" name="channel_combo_box">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -132,6 +129,53 @@
           </sizepolicy>
          </property>
         </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="sample_label">
+         <property name="text">
+          <string>Sampling rate</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QComboBox" name="sample_combo_box">
+         <item>
+          <property name="text">
+           <string>44100 Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>48000 Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>88200 Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>96000 Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>176400 Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>192000 Hz</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="3">
+        <widget class="QComboBox" name="interface_combo_box"/>
        </item>
       </layout>
      </widget>
@@ -143,7 +187,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>453</width>
+     <width>458</width>
      <height>22</height>
     </rect>
    </property>

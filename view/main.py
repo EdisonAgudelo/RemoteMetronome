@@ -27,6 +27,7 @@ class MainUI(Ui_Metronome):
         
         self.interface_combo_box.currentIndexChanged.connect(self._onInterfaceSelectionChange)
         self.channel_combo_box.currentIndexChanged.connect(self._onChannelSelectionChange)
+        self.sample_combo_box.currentIndexChanged.connect(self._onSampleRateSelectionChange)
         self.h_sound_input.textChanged.connect(self._onSoundChange)
         self.l_sound_input.textChanged.connect(self._onSoundChange)
         self.index_combo_box.currentIndexChanged.connect(self._onIndexChange)
@@ -51,7 +52,7 @@ class MainUI(Ui_Metronome):
         return [self.h_sound_input.text(), self.l_sound_input.text()]
 
     def get_current_output_config(self) -> tuple[str, str]:
-        return (self.interface_combo_box.currentText(), self.channel_combo_box.currentText())
+        return (self.interface_combo_box.currentText(), self.channel_combo_box.currentText(), int(self.sample_combo_box.currentText().split(' ')[0]))
 
     def get_current_index(self):
         return self.index_combo_box.currentText()
@@ -90,6 +91,11 @@ class MainUI(Ui_Metronome):
         """
 
     def _onChannelSelectionChange(self):
+        """
+        place holder for subclass
+        """
+
+    def _onSampleRateSelectionChange(self):
         """
         place holder for subclass
         """

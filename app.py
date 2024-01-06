@@ -39,7 +39,7 @@ class Main(MainUI):
         return names, channels
 
     def reloadMetro(self):
-        interface_name, channel = self.get_current_output_config()
+        interface_name, channel, sample_rate = self.get_current_output_config()
         try:
             channel = int(channel)
         except:
@@ -65,10 +65,13 @@ class Main(MainUI):
         self.metro.close()
 
         try:
-            self.metro = Metronome(self.get_current_audio_samples(), device_id=device_id, channel_offset=channel )
+            self.metro = Metronome(self.get_current_audio_samples(), device_id=device_id, channel_offset=channel, sample_rate = sample_rate)
         except Exception as e:
             print(e)
-            self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
+            try:
+                self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
+            except:
+                pass
 
         if metro_running:
             self.metro.set_bar_size(current_bar_size)
@@ -81,6 +84,9 @@ class Main(MainUI):
 
     def _onChannelSelectionChange(self):
         self.reloadMetro()    
+    
+    def _onSampleRateSelectionChange(self):
+        self.reloadMetro()
 
     def _onIndexChange(self):
         new_index = self.get_current_index()
