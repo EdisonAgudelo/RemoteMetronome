@@ -1,5 +1,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMessageBox
 from view._main import Ui_Metronome
 import sys
 
@@ -18,6 +19,15 @@ class MainUI(Ui_Metronome):
         )
 
         input_to_modify.setText(file_name[0])
+
+
+    def show_error(self, msg): 
+        dlg = QMessageBox(self.win)
+        dlg.setWindowTitle("Error")
+        dlg.setText(msg)
+        dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        dlg.setIcon(QMessageBox.Icon.Critical)
+        dlg.exec()
 
 
     def __load_events(self):

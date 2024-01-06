@@ -53,6 +53,7 @@ class Main(MainUI):
         if device_id == None:
             channel = None
             print("No output device found!")
+            self.show_error("Can't found requested output device id")
             return
 
 
@@ -66,8 +67,14 @@ class Main(MainUI):
 
         try:
             self.metro = Metronome(self.get_current_audio_samples(), device_id=device_id, channel_offset=channel, sample_rate = sample_rate)
+        except FileNotFoundError:
+            try:
+                self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
+            except:
+                pass
         except Exception as e:
             print(e)
+            self.show_error(f"Can't set metronome configuration\n{str(e)}")
             try:
                 self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
             except:
