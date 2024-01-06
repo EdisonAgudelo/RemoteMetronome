@@ -1,5 +1,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMessageBox
 from view._main import Ui_Metronome
 import sys
 
@@ -20,6 +21,15 @@ class MainUI(Ui_Metronome):
         input_to_modify.setText(file_name[0])
 
 
+    def show_error(self, msg): 
+        dlg = QMessageBox(self.win)
+        dlg.setWindowTitle("Error")
+        dlg.setText(msg)
+        dlg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        dlg.setIcon(QMessageBox.Icon.Critical)
+        dlg.exec()
+
+
     def __load_events(self):
         
         self.h_sound_button.clicked.connect(lambda: self.browse_file(self.h_sound_input, "WAV file (*.wav)", "Select H sound"))
@@ -27,6 +37,7 @@ class MainUI(Ui_Metronome):
         
         self.interface_combo_box.currentIndexChanged.connect(self._onInterfaceSelectionChange)
         self.channel_combo_box.currentIndexChanged.connect(self._onChannelSelectionChange)
+        self.sample_combo_box.currentIndexChanged.connect(self._onSampleRateSelectionChange)
         self.h_sound_input.textChanged.connect(self._onSoundChange)
         self.l_sound_input.textChanged.connect(self._onSoundChange)
         self.index_combo_box.currentIndexChanged.connect(self._onIndexChange)
@@ -51,7 +62,7 @@ class MainUI(Ui_Metronome):
         return [self.h_sound_input.text(), self.l_sound_input.text()]
 
     def get_current_output_config(self) -> tuple[str, str]:
-        return (self.interface_combo_box.currentText(), self.channel_combo_box.currentText())
+        return (self.interface_combo_box.currentText(), self.channel_combo_box.currentText(), int(self.sample_combo_box.currentText().split(' ')[0]))
 
     def get_current_index(self):
         return self.index_combo_box.currentText()
@@ -90,6 +101,11 @@ class MainUI(Ui_Metronome):
         """
 
     def _onChannelSelectionChange(self):
+        """
+        place holder for subclass
+        """
+
+    def _onSampleRateSelectionChange(self):
         """
         place holder for subclass
         """

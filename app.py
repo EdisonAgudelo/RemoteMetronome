@@ -19,7 +19,7 @@ class Main(MainUI):
         super().__init__()
 
     def get_app_version(self):
-        return "v1.0.0"
+        return "v1.1.0"
 
     def get_icon_path(self):
         return "metronome.png"
@@ -39,7 +39,7 @@ class Main(MainUI):
         return names, channels
 
     def reloadMetro(self):
-        interface_name, channel = self.get_current_output_config()
+        interface_name, channel, sample_rate = self.get_current_output_config()
         try:
             channel = int(channel)
         except:
@@ -53,6 +53,7 @@ class Main(MainUI):
         if device_id == None:
             channel = None
             print("No output device found!")
+            self.show_error("Can't found requested output device id")
             return
 
 
@@ -65,10 +66,19 @@ class Main(MainUI):
         self.metro.close()
 
         try:
-            self.metro = Metronome(self.get_current_audio_samples(), device_id=device_id, channel_offset=channel )
+            self.metro = Metronome(self.get_current_audio_samples(), device_id=device_id, channel_offset=channel, sample_rate = sample_rate)
+        except FileNotFoundError:
+            try:
+                self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
+            except:
+                pass
         except Exception as e:
             print(e)
-            self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
+            self.show_error(f"Can't set metronome configuration\n{str(e)}")
+            try:
+                self.metro = Metronome(DEFAULT_SOUNDS, device_id=device_id, channel_offset=channel)
+            except:
+                pass
 
         if metro_running:
             self.metro.set_bar_size(current_bar_size)
@@ -81,6 +91,9 @@ class Main(MainUI):
 
     def _onChannelSelectionChange(self):
         self.reloadMetro()    
+    
+    def _onSampleRateSelectionChange(self):
+        self.reloadMetro()
 
     def _onIndexChange(self):
         new_index = self.get_current_index()

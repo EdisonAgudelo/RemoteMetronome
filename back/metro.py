@@ -3,13 +3,13 @@ import PyWave
 import threading
 import flask_sock
 import sounddevice as sd
+import numpy as np
 
 
 class AudioBackend():
 
     def __init__(self) -> None:
         ...
-    
     def open(self, width,  channels , rate , output = False, input = False, stream_callback = None, frames_per_buffer = 1024, output_device_id = None, input_device_id = None, float = False):
         def widthtodtype(size):
             return f'{"float" if float else "int"}{8*size}'
@@ -49,7 +49,7 @@ class IntervalPlayer(AudioBackend):
 
     _chunk = 1024  
 
-    def __init__(self, sample_files:list[str], device_id = None, channel_offset = None) -> None:
+    def __init__(self, sample_files:list[str], device_id = None, channel_offset = None, sample_rate = 48000) -> None:
 
         super().__init__()
 
@@ -132,28 +132,74 @@ class IntervalPlayer(AudioBackend):
             return extra_channels_buffer
 
 
-        if channel_offset:
+        def resample(buffer, width, is_float, org_rate, new_rate):
+            
+            resample_factor = new_rate / org_rate
+
+            if width != 3:
+                array = buffer
+            else:
+                array = []
+                for sample in buffer:
+                    data = b""
+                    for i in range(len(sample) // width):
+                        data +=  int.from_bytes(sample[i*width:(i+1)*width], "little", signed=True).to_bytes(4, "little", signed=True)
+                    array.append(data)
+
+            index = 0
+            for channel_sample in array:
+                if width == 2:
+                    dtype = np.dtype(np.int16).newbyteorder('<')
+                elif is_float:
+                    dtype = np.dtype(np.float32).newbyteorder('<')
+                else:
+                    dtype = np.dtype(np.int32).newbyteorder('<')
+    
+                channel_sample = np.frombuffer(channel_sample, dtype=dtype)
+                #array = signal.resample_poly(array, int( len(array) * resample_factor), 1)
+                n =  int( len(channel_sample) * resample_factor)
+                channel_sample = np.interp(
+                    np.linspace(0.0, 1.0, n, endpoint=False),  # where to interpret
+                    np.linspace(0.0, 1.0, len(channel_sample), endpoint=False),  # known positions
+                    channel_sample,  # known data points
+                )
+                channel_sample = channel_sample.astype(dtype).tobytes()
+                if width == 3:
+                    buffer[index] = b""
+                    for byte_count in range(len(channel_sample)):
+                        if (byte_count % 4) != 3:
+                            buffer[index] += channel_sample[byte_count:byte_count+1]
+                else:
+                    buffer[index] = channel_sample
+                index += 1
+
+            return buffer
+
+
+        if channel_offset or self._rate != sample_rate:
             #make a channel padding
             new_data = []
+            sample_index = 0
             for data in self._audio_data:
 
                 buffer = decode(data, channels, width)
+                buffer = resample(buffer, width, is_float,self._rate, sample_rate)
+                self._frames_in_audio[sample_index] = len(buffer[0]) // width
                 buffer = add_extra_channels_ahead(buffer, channel_offset)
                 new_data.append(encode(buffer, width))
+                sample_index += 1
             self._audio_data = new_data
         #open stream  
-        try:
-            self.open(  width=width,  
-                        channels = channels + channel_offset,  
-                        rate = self._rate,  
-                        output = True,
-                        stream_callback = self.__play_callback,
-                        frames_per_buffer = self._chunk,
-                        output_device_id=device_id,
-                        float=is_float)
+        
+        self.open(  width=width,  
+                    channels = channels + channel_offset, 
+                    rate = int(sample_rate),  
+                    output = True,
+                    stream_callback = self.__play_callback,
+                    frames_per_buffer = self._chunk,
+                    output_device_id=device_id,
+                    float=is_float)
 
-        except Exception as e:
-            print(f"Can't open stream {str(e)}")
         
     def _get_next_sample_id(self) -> int:
         #should be reimplemented in a subclass
