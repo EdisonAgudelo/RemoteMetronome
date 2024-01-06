@@ -19,7 +19,7 @@ class Main(MainUI):
         super().__init__()
 
     def get_app_version(self):
-        return "v1.0.0"
+        return "v1.1.0"
 
     def get_icon_path(self):
         return "metronome.png"
